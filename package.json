@@ -2,6 +2,10 @@
   "name": "accio",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=18.0.0 <=22.11.0",
+    "npm": ">=8.0.0"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -25,7 +29,8 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
     "reflect-metadata": "^0.2.0",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "zustand": "^4.4.1"
   },
   "devDependencies": {
     "typescript": "^5",
