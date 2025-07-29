@@ -1,12 +1,7 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": ".next",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install",
-  "framework": "nextjs",
   "functions": {
-    "api/**/*.ts": {
-      "runtime": "nodejs18.x"
+    "api/index.ts": {
+      "runtime": "@vercel/node@3.1.1"
     }
   },
   "rewrites": [
@@ -14,8 +9,5 @@
       "source": "/api/(.*)",
       "destination": "/api/index"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }
