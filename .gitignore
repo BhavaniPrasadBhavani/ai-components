@@ -10,6 +10,11 @@
 !.yarn/releases
 !.yarn/versions
 
+# Backend dependencies and build
+backend/node_modules/
+backend/dist/
+backend/.env*
+
 # testing
 /coverage
 
