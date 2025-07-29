@@ -42,14 +42,26 @@ export interface RegisterData {
   password: string;
 }
 
+export interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp?: string;
+}
+
+export interface GeneratedCode {
+  tsx: string;
+  css: string;
+}
+
+export interface UIEditorState {
+  [key: string]: unknown;
+}
+
 export interface SessionData {
   name?: string;
-  chat_history?: any[];
-  generated_code?: {
-    tsx: string;
-    css: string;
-  };
-  ui_editor_state?: any;
+  chat_history?: ChatMessage[];
+  generated_code?: GeneratedCode;
+  ui_editor_state?: UIEditorState;
 }
 
 export const api = {

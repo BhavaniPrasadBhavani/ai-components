@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAppStore } from '@/lib/store';
 import { api } from '@/lib/api';
 import type { ChatMessage } from '@/lib/store';
@@ -13,7 +13,6 @@ export default function ChatPanel() {
     addChatMessage,
     updateLastMessage,
     setGeneratedCode,
-    updateActiveSession,
   } = useAppStore();
 
   const [input, setInput] = useState('');
@@ -131,10 +130,10 @@ export default function ChatPanel() {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSubmit(e as any);
+      handleSubmit(e as React.FormEvent);
     }
   };
 
@@ -164,7 +163,7 @@ export default function ChatPanel() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
             <p>Start a conversation to generate your first component!</p>
-            <p className="text-xs mt-2">Try: "Create a modern button component with a blue gradient"</p>
+            <p className="text-xs mt-2">Try: &ldquo;Create a modern button component with a blue gradient&rdquo;</p>
           </div>
         ) : (
           activeSession?.chat_history?.map((message, index) => (

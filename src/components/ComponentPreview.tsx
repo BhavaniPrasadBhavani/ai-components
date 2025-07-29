@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useAppStore } from '@/lib/store';
 
 export default function ComponentPreview() {
@@ -166,7 +166,7 @@ ${transformedTsxCode}
       </body>
       </html>
     `;
-  }, [activeSession?.generated_code]);
+  }, [activeSession?.generated_code, activeSession]);
 
   return (
     <div className="h-full flex flex-col">
