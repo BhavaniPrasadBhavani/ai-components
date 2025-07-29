@@ -1,82 +1,89 @@
 # 🚀 Vercel Deployment Guide for AI Component Generator
 
 ## Prerequisites
-1. GitHub account with your code pushed
+1. GitHub account with your code pushed to `ai-components` repository
 2. Vercel account (free tier available)
-3. Database provider (Supabase/Neon/Railway)
+3. GitHub Personal Access Token with GitHub Models access
 
 ## 🎯 Deployment Steps
 
-### 1. Set up Database
-Choose one:
-- **Supabase**: https://supabase.com (Recommended - free tier)
-- **Neon**: https://neon.tech (Serverless Postgres)
-- **Railway**: https://railway.app (All-in-one)
+### 1. Single Monorepo Deployment (Recommended)
+This project is configured for single-deployment on Vercel:
 
-Get your `DATABASE_URL` connection string.
+1. **Import Project to Vercel**
+   - Go to https://vercel.com
+   - Click "Import Project"
+   - Connect your GitHub repository: `BhavaniPrasadBhavani/ai-components`
+   - Vercel will automatically detect it's a Next.js project
 
-### 2. Deploy Frontend to Vercel
-1. Go to https://vercel.com
-2. Click "Import Project" 
-3. Connect your GitHub repo
-4. Select the root directory (`/accio`)
-5. Set these environment variables:
+2. **Set Environment Variables**
+   In your Vercel dashboard, add these environment variables:
    ```
-   NEXT_PUBLIC_API_URL=https://your-backend-name.vercel.app/api
+   LLM_API_KEY=your_github_token_here
+   LLM_BASE_URL=https://models.inference.ai.azure.com
+   JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+   JWT_EXPIRES_IN=7d
    NODE_ENV=production
    ```
-6. Deploy!
 
-### 3. Deploy Backend to Vercel
-1. Create a new Vercel project for backend
-2. Connect same GitHub repo
-3. Set root directory to `/backend`
-4. Set these environment variables:
-   ```
-   DATABASE_URL=your-postgres-connection-string
-   JWT_SECRET=your-super-secret-jwt-key
-   GITHUB_TOKEN=your-github-token-here
-   GITHUB_MODEL=gpt-4o-mini
-   NODE_ENV=production
-   FRONTEND_URL=https://your-frontend-name.vercel.app
-   ```
-5. Deploy!
+3. **Deploy**
+   - Click "Deploy"
+   - Vercel will build and deploy both frontend and backend
+   - Frontend will be accessible at your domain root
+   - Backend API will be accessible at `/api/*`
 
-### 4. Update CORS & URLs
-1. Update frontend's `NEXT_PUBLIC_API_URL` with backend Vercel URL
-2. Update backend's `FRONTEND_URL` with frontend Vercel URL
-3. Redeploy both if needed
+### 2. Architecture Overview
+- **Frontend**: Next.js app at root (`/`)
+- **Backend**: NestJS API functions at `/api/*`
+- **API Handler**: Single entry point at `/api/index.ts`
+- **Configuration**: Monorepo setup via `vercel.json`
 
-## 🌐 Alternative: Single Monorepo Deployment
-Deploy everything in one Vercel project:
-1. Use the root `vercel.json` configuration
-2. Set all environment variables in one project
-3. Frontend will be at root, backend at `/api/*`
+### 3. Getting Your GitHub Token
+1. Go to GitHub Settings → Developer settings → Personal access tokens
+2. Generate a new token (classic)
+3. Select these scopes:
+   - `repo` (if repository is private)
+   - Enable "GitHub Models" access (in beta)
+4. Copy the token and use it as `LLM_API_KEY`
 
 ## 🔧 Environment Variables Summary
 
-### Frontend (.env.local):
+### Required for Deployment:
 ```
-NEXT_PUBLIC_API_URL=https://your-backend.vercel.app/api
+LLM_API_KEY=ghp_your_github_token_here
+LLM_BASE_URL=https://models.inference.ai.azure.com
+JWT_SECRET=your-super-secret-jwt-key-here
+JWT_EXPIRES_IN=7d
+NODE_ENV=production
 ```
 
-### Backend (.env):
-```
-DATABASE_URL=postgresql://...
-JWT_SECRET=your-secret
-GITHUB_TOKEN=ghp_...
-GITHUB_MODEL=gpt-4o-mini
-NODE_ENV=production
-FRONTEND_URL=https://your-frontend.vercel.app
-```
+### How it Works:
+- The `/api/index.ts` file serves as the serverless function entry point
+- All NestJS controllers and services are bundled into this single function
+- Frontend makes API calls to `/api/*` which are handled by the backend
+- No separate deployment needed - everything is in one Vercel project
 
 ## 🎉 After Deployment
-1. Test user registration/login
-2. Test AI component generation
-3. Verify live preview works
-4. Check all features end-to-end
+1. Visit your Vercel app URL
+2. Test the AI component generation
+3. Try generating different types of components
+4. Verify the live preview works
+5. Check that CSS styling is properly applied
 
-## 📞 Support
+## 🛠️ Troubleshooting
+
+### Common Issues:
+1. **Build Errors**: Check that all dependencies are in the root `package.json`
+2. **API Errors**: Verify environment variables are set correctly
+3. **CORS Issues**: Check that origins are properly configured in `api/index.ts`
+4. **GitHub Models Access**: Ensure your token has proper permissions
+
+### Logs:
+- Check Vercel Function logs in the dashboard
+- Use Vercel CLI: `vercel logs`
+
+## 📞 Resources
 - Vercel Docs: https://vercel.com/docs
-- NestJS Vercel: https://docs.nestjs.com/faq/serverless
+- GitHub Models: https://github.com/marketplace/models
 - Next.js Deployment: https://nextjs.org/docs/deployment
+- NestJS Serverless: https://docs.nestjs.com/faq/serverless
